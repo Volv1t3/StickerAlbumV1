@@ -1,0 +1,14 @@
+//
+// Created by santi on 12/4/2023.
+//
+
+#ifndef STICKERALBUMV1_SVV1_GENERALSTICKER_HPP
+#define STICKERALBUMV1_SVV1_GENERALSTICKER_HPP
+
+
+class SVV1_GeneralSticker {
+
+};
+
+
+#endif //STICKERALBUMV1_SVV1_GENERALSTICKER_HPP
