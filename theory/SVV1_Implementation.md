@@ -117,10 +117,83 @@ of how this function would work is defined,
 #include <string>
 std::string getSerializedString()
 {
-    std::string SerializedString = "|";
-    ...
+    std::stringstream SerializedString;
+    SerializedString << SVV1_GeneralSticker::STICKER_INDICATOR
+    <<  std::setw(20) << std::right << this->NameOfSticker
+    << std::setw(50) << std::right << this->DescriptionOfSticker
+    << std::setw(10) << std::right << this->ValueOfSticker
+    << "\n";
+    return SerializedString.str();
 }
+```
 
+<p> The body of code presented before represents an initial approach to organizing every data member
+of the file regarding its type. For now the constant <code>STICKER_INDICATOR</code> references a character
+which can be used to read in from the file and determine that it is a sticker and not some other structures. The following naming 
+conventions will be used when it comes to storing different objects </p>
+<br>
+<ul>
+<li> <b>S : </b> S will represent stickers, this character (in uppercase) will be read during line parsing of generated file;
+</li><br>
+<li> <b>A : </b> A will be used to indicate an Album, since the user can generate basically <code> n </code> number of albums we need to have
+a way to store them in the file and iterate through them.
+</li>
+</ul>
+
+***
+<h6  style="color: antiquewhite; font-family: 'Segoe UI', sans-serif; text-align: center"> Sticker Pack Representation </h6>
+
+<p> The observant reader might have noticed that in the last section we failed to detail which constant will be used to store any kind of 
+sticker packet that the user might open again. And this is not an incident of poor attention to detail, but rather a conscious design choice. 
+In the game of collecting stickers, when someone does not get a good set they usually go to another vendor or ask for another lot to choose from. This means that
+humans in general do not tolerate repetition as well as a computer might do or as an iterative program might do. As such we shouldn't and really musn't store any kind of
+sticker pack information since this would make the outcome of the other pack known and probably take out the fun of having a random number generator on them or shuffling randomly </p>
+
+<p> It is because of this reason that I have chosen the following implementation details to be followed when it comes to the cards at play inside their respective packs</p>
+
+<ul>
+<li> <b> Adaptability: </b> Since our sticker cards can be instantiated on the fly either by giving them a serialized string or by giving them the data, we can create these packs on the fly too,
+with a good method to generate cards the number of times the user wants we can define a method that creates these cards based on randomized numerical
+inputs like <code> std::random_device </code> values using int distributions, we generate from 0 to 25 and instantiate on the fly and randomly 
+the values to be stored in the packs.</li>
+<li> <b> Portability and size: </b> Since our objects have to hold five stickers each, and we also have to generate an <code>n </code>number of them it follows that the structure must be as 
+lightweight as possible, having only the necessary values to be stored as a private data value.</li>
+<li> <b> Access and Addition of Stickers: </b> Since the previous class for stickers already has its own form to serialize its own data, we have to focus mainly on how to add those stickers in here,
+since a pack also cannot hold any kind of duplicated sticker we make use of the overloaded == operator to make comparisons  between cards and decide on the fly. Furthermore we can reduce the adding and checking to a simple
+method to keep the class lightweight</li>
+<li> <b> Serialization of Data: </b> Based on the current structure for this class we will only need to define a constant like the list above, 
+and a function to serialize it using its name, for instance pack 0, pack 1, pack 2, pack 3, etc. While we do not need that name since there is no need to 
+name the packs in any way, it would be better that if we are calling them we can keep track of how many there are.</li>
+</ul>
+<br>
+<p> As can be noted, the implementation of said class is not exactly challenging, yet the implementation is not straightforward either, we have got to analize
+the effects of continuous integration between our initial data class and our sticker pack class, as such I propose th following initial class definition</p>
+<br>
+
+```c++
+
+#include ....
+#include "./../SVV1_GeneralSticker"
+
+class SVV1_StickerPack
+{
+private:
+    /* Data member to hold the cards assigned to an instance*/
+    std::vector<SVV1_GeneralSticker> DataValueArrayHolder{};
+    /* Data member to keep track of instantiation index, given by outside methods defined in later sections*/
+    unsigned int StickerPackIndex{0};
+    public:
+    /* Public Constructor which will not take any values except for the initial index of instantiation*/
+    [[maybe_unused]] explicit SVV1_StickerPack(unsigned int InstantiationIndexForPack);
+    /* Method to Add cards into the pack */
+    [[maybe_unused]] SVV1_StickerPack& addStickerToPack(SVV1_GeneralSticker& OtherStickerInstance);
+    /*Method for Serializing the name of the pack */
+    [[maybe_unused, nodiscard]] std::string SerializePack();
+    /*Method for accessing the data value vector for visualization*/
+    [[maybe_unused, nodiscard]] std::vector<SVV1_GeneralSticker> getDataArray() const;
+    /*Method for returning a certain instance inside the vector*/
+    [[maybe_unused, nodiscard]] SVV1_GeneralSticker getStickerAtLocationInVector(size_t indexOfSticker);
+};
 ```
 
 

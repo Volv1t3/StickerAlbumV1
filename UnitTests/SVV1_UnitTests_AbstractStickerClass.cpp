@@ -12,6 +12,15 @@
 
 int main()
 {
+    {
+        SVV1_GeneralSticker stickerOne(0, "Santiago", "Santiago");
+        SVV1_GeneralSticker stickerTwo(1, "Santiago", "Santiago");
+        SVV1_GeneralSticker stickerThree(0, "Santiago", "Santiago");
+
+        if (stickerOne == stickerTwo) {std::cout << "Sticker 1 and 2 are EQUAL";}
+        if (stickerOne == stickerThree) {std::cout << "Sticker 1 and 3 are EQUAL";}
+        if (stickerTwo == stickerThree) {std::cout << "Sticker 2 and 3 are EQUAL";}
+    }
     //! Test Cases of Implementation and Instantiation
     {
         std::string name = "Santiago";
@@ -34,4 +43,6 @@ int main()
             std::cout << value.createSerializedString() << std::endl;
         }
     }
+    //! Test case for operator overloaded
+
 }

@@ -2,7 +2,7 @@
 !                Estructura General
 ?1. Author : Santiago Arellano,
 ?2. Definition: General Sticker Class Definition
-?3. Directions: DO NOT TOUCH
+?3. Directions: Class has already been implemented new methods must have unit tests and integration tests
 -----------------------------------------------**/
 #include <string>
 #ifndef STICKERALBUMV1_SVV1_GENERALSTICKER_HPP
@@ -27,7 +27,7 @@ public /* The following section wil hold abstract functionality and the initial 
     /* Method for Returning Name of The Sticker (Debug and Test Only)*/
     [[maybe_unused, nodiscard]] std::string getNameOfSticker() const ;
     /*Operator overloading for ==*/
-    bool operator==(SVV1_GeneralSticker& OtherInstance);
+    bool operator==(const SVV1_GeneralSticker& OtherInstance) const;
     /* Method for Returning Serialized String*/
     [[maybe_unused, nodiscard]] std::string createSerializedString() const;
     static const char STICKER_INDICATOR;

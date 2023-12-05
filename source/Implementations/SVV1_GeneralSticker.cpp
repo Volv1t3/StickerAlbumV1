@@ -2,7 +2,7 @@
 !                Estructura General
 ?1. Author : Santiago Arellano,
 ?2. Definition: General Sticker Class Definition
-?3. Directions: DO NOT TOUCH
+?3. Directions: New methods must be added in their corresponding sections, consider headings defined by //!
 -----------------------------------------------**/
 #include <string>
 #include <sstream>
@@ -37,17 +37,15 @@ std::string SVV1_GeneralSticker::getNameOfSticker() const { return this->NameOfS
 
 //! Implementacion Operator Overload ==
 
-bool SVV1_GeneralSticker::operator==(SVV1_GeneralSticker &OtherInstance) {
+bool SVV1_GeneralSticker::operator==(const SVV1_GeneralSticker &OtherInstance) const {
     bool resultOfComparison = false;
     bool resultOfDescriptionCheck = std::equal(this->DescriptionOfSticker.begin(),
                                                this->DescriptionOfSticker.end(),
-                                               OtherInstance.getDescriptionOfSticker().begin(),
-                                               OtherInstance.getDescriptionOfSticker().end());
+                                               OtherInstance.getDescriptionOfSticker().begin());
     bool resultOfNameCheck = std::equal(this->NameOfSticker.begin(),
                                         this->NameOfSticker.end(),
-                                        OtherInstance.getNameOfSticker().begin(),
-                                        OtherInstance.getNameOfSticker().end());
-    bool resultOfValueCheck = this->ValueOfSticker == OtherInstance.getValueOfSticker();
+                                        OtherInstance.getNameOfSticker().begin());
+    bool resultOfValueCheck = {(this->ValueOfSticker == OtherInstance.getValueOfSticker()) ? true : false};
 
     if (resultOfDescriptionCheck && resultOfNameCheck && resultOfValueCheck) {resultOfComparison = true;}
 

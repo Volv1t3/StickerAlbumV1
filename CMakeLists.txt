@@ -18,5 +18,7 @@ add_executable(StickerAlbumV1 main.cpp
         #Files For General Sticker Class
         source/Implementations/SVV1_GeneralSticker.cpp
         source/Headers/SVV1_GeneralSticker.hpp
+        source/Implementations/SVV1_StickerPack.cpp
+        source/Headers/SVV1_StickerPack.hpp
 
-        )
+)
