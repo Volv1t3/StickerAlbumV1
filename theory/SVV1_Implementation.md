@@ -99,7 +99,7 @@ class SVV1_GeneralSticker
     /*Method for Description Update */
     SVV1_GeneralSticker& updateDescriptionOfSticker(std::string NewDescriptionOfSticker);
     /*Method for Value Update*/
-    SVV1_GeneralSticker& updateVauleOfSticker(unsigned int NewValueOfStricker);
+    SVV1_GeneralSticker& updateValueOfSticker(unsigned int NewValueOfStricker);
     /* Method from reading data from serialized string*/
     void ReadFromSerializedString(std::SerializedPartialString);
 };
