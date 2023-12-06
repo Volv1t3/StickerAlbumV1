@@ -11,6 +11,8 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <algorithm>
+#include <random>
 
 int main()
 {
@@ -72,6 +74,63 @@ int main()
         auto serializedData = stickerPackAlpha.getSerializedPack();
         //? Printing the serialized data
         std::cout << serializedData << std::endl;
+    }
+
+    //!  Unit Test 3 - Creating the packs using a given number from the user;
+    {
+        using namespace std;
+        int numberOfAlbums{0};
+        cout << "Enter how many albums you want to fill out... "; cin >> numberOfAlbums;
+        //! Define holders
+        const std::array<std::string, 25> CardNames{"Planck", "Bethe",
+                                                     "Heisenberg", "Goeppert"
+        ,"Kaku","Einstein", "Randall", "Rubin", "Curie","Hawking","Joule",
+        "Teller","Sommerfeld","Noether","Hilbert","Pointcare","Laplace","Cauchy",
+        "Euler", "Turing","Riemann","Fermat","Germain","Jayam","Godel"};
+
+        std::vector<SVV1_GeneralSticker> stickers;
+        //? Define working constants
+        auto amountOfPacks = numberOfAlbums * 5;
+        auto amountOfStickers = numberOfAlbums * 25;
+        //? Create the stickers using amount of stickers
+        int counter{0};
+        for(size_t repetition = 0; repetition < amountOfPacks; repetition +=1)
+        {
+            for(size_t index = 0; index < 5; index +=1)
+            {
+                stickers.push_back(SVV1_GeneralSticker(
+                        repetition + 1,
+                        CardNames[repetition % 25], CardNames[repetition % 25]));
+                counter +=1;
+            }
+        }
+        std::cout << "Total stickers created: " << counter << std::endl;
+        std::shuffle(stickers.begin(), stickers.end(), std::mt19937(std::random_device()()));
+
+        //! print set of cards
+        for(auto const& value: stickers)
+        {
+            std::cout << value.createSerializedString() << std::endl;
+        }
+        size_t start_index = 0;
+        //Creating packs out of the values given.
+        std::vector<SVV1_StickerPack> stickerPacks;
+        for(size_t packNum =0; packNum < amountOfPacks; packNum +=1)
+        {
+            stickerPacks.push_back(SVV1_StickerPack());
+            for(size_t i = 0; i < 5; i +=1)
+            {
+                size_t index = packNum*5 + i;
+                if (index < stickers.size()) {
+                    stickerPacks[packNum].addStickerToPack(stickers[index]);
+                }
+            }
+        }
+
+        for(const auto& value: stickerPacks)
+        {
+            std::cout << value.getSerializedPack() << std::endl;
+        }
     }
 
 }

@@ -188,7 +188,7 @@ private:
     /* Method to Add cards into the pack */
     [[maybe_unused]] SVV1_StickerPack& addStickerToPack(SVV1_GeneralSticker& OtherStickerInstance);
     /*Method for Serializing the name of the pack */
-    [[maybe_unused, nodiscard]] std::string SerializePack();
+    [[maybe_unused, nodiscard]] std::string getSerializePack();
     /*Method for accessing the data value vector for visualization*/
     [[maybe_unused, nodiscard]] std::vector<SVV1_GeneralSticker> getDataArray() const;
     /*Method for returning a certain instance inside the vector*/
@@ -196,5 +196,134 @@ private:
 };
 ```
 
+<p> With this class now implemented  there appears to be another more pressing issue at hand. Now that we can create the sticker packs and the stickers, we ought to find a way 
+to dynamically create them during execution time and under the users desires. For instance, as narrated in the project description documentation, if a user wants to play with 10 packs, 
+not only do we have to create 250 cards (10 per 25 types) but we also have to group them in sets of 5 stickers per pack, and through this we also need to identify a method for genearting these cards, 
+randomly allocating one of the 250 cards and at least some of the types in every pack. This brings up a few important issues,not about class definition, but about instantiation. As the requirements state, we need to define some way to
+allocate these variables on the fly. One way to do this would follow like this</p>
 
+```c++
+std::vector<std::vector<SVV1_StickerPack>> PackHolder;
+std::vector<SVV1_GeneralSticker> MassiveStickerHolder;
+//? Create a random device
+std::random_decive rd;
+std::uniform_int_distribution<unsigned int> distro;
+...
+```
+
+<p> While this approach might seem counterproductive and resource intensive it is able to create a very large number of cards in mere seconds by using preoptimized functions, such as
+shuffle, and the random generators from the standard library. The new implementation, although still subjected to change is,</p>
+
+```c++
+using namespace std;
+        int numberOfAlbums{0};
+        cout << "Enter how many albums you want to fill out... "; cin >> numberOfAlbums;
+        //! Define holders
+        const std::array<std::string, 25> CardNames{"Planck", "Bethe",
+                                                     "Heisenberg", "Goeppert"
+        ,"Kaku","Einstein", "Randall", "Rubin", "Curie","Hawking","Joule",
+        "Teller","Sommerfeld","Noether","Hilbert","Pointcare","Laplace","Cauchy",
+        "Euler", "Turing","Riemann","Fermat","Germain","Jayam","Godel"};
+        std::vector<SVV1_StickerPack> stickerPacks;
+        std::vector<SVV1_GeneralSticker> stickers;
+        //? Define working constants
+        auto amountOfPacks = numberOfAlbums * 5;
+        auto amountOfStickers = numberOfAlbums * 25;
+        //? Create the stickers using amount of stickers
+        int counter{0};
+        for(size_t repetition = 0; repetition < amountOfPacks; repetition +=1)
+        {
+            for(size_t index = 0; index < 5; index +=1)
+            {
+                stickers.push_back(SVV1_GeneralSticker(
+                        repetition + 1,
+                        CardNames[repetition % 25], CardNames[repetition % 25]));
+                counter +=1;
+            }
+        }
+        std::cout << "Total stickers created: " << counter << std::endl;
+        std::shuffle(stickers.begin(), stickers.end(), std::mt19937(std::random_device()()));
+
+        //! print set of cards
+        for(auto const& value: stickers)
+        {
+            std::cout << value.createSerializedString() << std::endl;
+        }
+    }
+```
+
+<p> This method allows for the perfect creation of how many stickers the user might need. The last step in this method is to define how
+they will be allocated into their respective packs. Since there must only be five cards per each iteration I believe the best solution would be to keep a rolling index that moves along the normal
+for loop index and that defines the starting position of each sticker pack after every five indices.</p>
+<br>
+<p> After careful consideration and time thinking about how to manage the rolling index, the solution to the problem is presented below,</p>
+
+```c++
+//Creating packs out of the values given.
+        std::vector<SVV1_StickerPack> stickerPacks;
+        unsigned int rolling_index = 0;
+        for(size_t packNum =0; packNum < amountOfPacks; packNum +=1)
+        {
+            stickerPacks.push_back(SVV1_StickerPack());
+            for(size_t i = 0; i < 5; i +=1)
+            {
+                size_t index = packNum + 5 + i;
+                stickerPacks[packNum].addStickerToPack(stickers[index]);
+            }
+        }
+
+        for(const auto& value: stickerPacks)
+        {
+            std::cout << value.getDataArray().size() << std::endl;
+        }
+```
+<p> With these two things done we can move on to the next important nested class from this project, the album class.</p>
+
+***
+<h6  style="color: antiquewhite; font-family: 'Segoe UI', sans-serif; text-align: center"> Album Representation </h6>
+
+<p> An album, being the place where the user keeps their stickers must be capable of handling to some degree the "pasting" or 
+appending in the context of our language of the neccesary stickers to be full. For this reason our class must not use vectors as we
+have been using but it could benefit greatly from an array. Despite the basic structures being used here these two have proven to be quite resilient and useful
+to work with when it comes to dynamic programming, and while a set could also be used here, an array gives us much more control over what enters and what doesn't. </p>
+
+<p> In this sense and in light of the structure of this document I will give my ideas of what should be implemented inside the class</p>
+<ul>
+<li> <b> Control Over Access and Appending: </b> While this might seem obvious at first, we have to understand that in some cases the overload that we did to the original sticker class might not be as useful as we though 
+since we can check the values that are already in place on the array by actually looking at it, since it will be a double array (matrix) we can use it to check per position rather than per the entire lenght of the array. But this might
+change if difficulties during implementation arise.
+</li>
+<br>
+<li> <b> Serialization of Data: </b> Just like we are to be able to write directly into the stickers and packs through a file that contains the user's last session, 
+we must also be able to do the same for our albums, meaning thatwe have to create a chain of serialization. Albums call their own method which calls the method stored inside of their array for each of its parts, storing at the top of th
+text file the values for each of the albums, then for the repeated list of stickers and finally for each remaining pack.
+</li>
+</ul>
+
+<p> For this section, the class implementation would look something like this.</p>
+
+```c++
+
+#include ...
+
+class SVV1_Album
+{
+    private:
+    /*Area to store the cards that take part of the Album*/
+    std::vector<SVV1_GeneralSticker> Album;
+    /*Area to store the cards that have been repeated for this album*/
+    std::vector<SVV1_GeneralSticker> RepeatedStickers;
+    /* Area to store boolean to tell if the album its full, helpful to stop iterative calls if the album has already been filled */
+    bool isComplete = false;
+    public:
+    /*Main Constructor, will not take argument since it can only generate its own structures*/
+    [[maybe_unused]] SVV1_Album()= default;
+    /*Method to add a Cart to the album, it itself will check if it's already there*/
+    [[maybe_unused]] SVV1_Album& emplaceAStickerOnAlbum(SVV1_GeneralSticker StickerInstance);
+    /*Method for Serializing the Album*/
+    [[maybe_unused, nodiscard]] std::string serializingAlbum();
+};
+```
+
+<p> As always this is not the entire implementation and other methods will be added inside of the actual class file in this project.</p>
 

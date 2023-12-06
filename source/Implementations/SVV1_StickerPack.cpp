@@ -22,15 +22,7 @@ SVV1_StickerPack &SVV1_StickerPack::addStickerToPack(const SVV1_GeneralSticker& 
 {
     if (SVV1_StickerPack::DataValueArrayHolder.size() < 5)
     {
-        bool checkIfPresent = false;
-        for(const auto&  value : this->DataValueArrayHolder)
-        {
-            if (value == OtherStickerInstance) {checkIfPresent = true;}
-            else {continue;}
-        }
-
-        if (checkIfPresent == false) {this->DataValueArrayHolder.push_back(OtherStickerInstance);}
-        else {;}
+        this->DataValueArrayHolder.push_back(OtherStickerInstance);
     }
     else {throw std::out_of_range("Error Code 0x001 [Raised] - StickerPack is Full");}
 
@@ -55,7 +47,7 @@ SVV1_GeneralSticker SVV1_StickerPack::getStickerAtLocationInVector(size_t indexO
 
 //! Defintion for serializing data
 
-std::string SVV1_StickerPack::getSerializedPack()
+std::string SVV1_StickerPack::getSerializedPack() const
 {
     std::stringstream SerializedStream;
     //? Append formal data from pack
@@ -66,3 +58,8 @@ std::string SVV1_StickerPack::getSerializedPack()
     }
     return SerializedStream.str();
 }
+
+//! Iterators
+
+typename std::vector<SVV1_GeneralSticker>::const_iterator SVV1_StickerPack::begin() {return this->DataValueArrayHolder.begin();}
+typename std::vector<SVV1_GeneralSticker>::iterator SVV1_StickerPack::end() {return this->DataValueArrayHolder.end();}
