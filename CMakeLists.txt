@@ -24,5 +24,7 @@ add_executable(StickerAlbumV1 main.cpp
         #Files for General Album CLass
         source/Implementations/SVV1_Album.cpp
         source/Headers/SVV1_Album.hpp
-
+        #Files for Utilities Functional Programming Modules
+        source/Headers/SVV1_Utilities.hpp
+        source/Implementations/SVV1_Utilities.cpp
 )
