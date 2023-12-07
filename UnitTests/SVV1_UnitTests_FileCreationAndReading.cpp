@@ -1,3 +1,4 @@
+
 /**-----------------------------------------------
 !                Estructura General
 ?1. Author : Santiago Arellano,
@@ -16,7 +17,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
-
+#include <fstream>
 int main()
 {
     //! Unit test complete - creating cards using methods already defined then creating albums, appending cards to it from the shuffled
@@ -93,8 +94,7 @@ int main()
                     }
                     catch(std::exception &e)
                     {
-                        std::cout << "Error occured when filling up albums" << std::endl;
-                        std::cout << e.what() << std::endl;
+                        ;
                     }
                 }
 
@@ -107,5 +107,82 @@ int main()
         {
             std::cout << value.serializingAlbum();
         }
+
+
+        std::ofstream outputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::out);
+        //? Defining the amount of albums the user created
+        outputOfCreation << numberOfAlbums << "\n";
+        //? Serializing the data inside album first;
+        for(auto const& value: albums)
+        {
+            outputOfCreation << value.serializingAlbum();
+        }
+        //? Serializing the data inside pack
+        outputOfCreation << amountOfPacks << "\n";
+        for(auto const& value: stickerPacks)
+        {
+            outputOfCreation << value.getSerializedPack();
+        }
+
+        //? With the data created I would like to open the file and read from it to the screen so Im going to send a system cls first
+        outputOfCreation.close();
+        //? Now I would like to open the file and read from it to the screen
+        std::ifstream inputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::in);
+
+        std::string line;
+        std::getline(inputOfCreation, line);
+        //? Reading the first line which is the amount of albums created
+        auto amount_albums = std::stoi(line);
+        std::cout << "Amount of albums created: " << amount_albums << std::endl;
+        std::vector<SVV1_Album> abumsRead;
+        for(size_t index = 0; index < amount_albums; index +=1) {abumsRead.emplace_back();}
+        //? Reading the data inside of the albums
+
+        for(size_t j =0; j < amount_albums; j +=1)
+        {
+            for (size_t index = 1; index <= 26; index += 1) {
+                std::getline(inputOfCreation, line);
+                if (std::equal(line.begin(),line.end(), "A"))
+                {
+                    continue;
+                }
+                std::cout << line << std::endl;
+                abumsRead.at(j).emplaceAStickerOnAlbum(SVV1_GeneralSticker(line));
+            }
+        }
+
+        for(auto const& value: abumsRead)
+        {
+            std::cout << "DESERIALIZED ALBUM" << std::endl;
+            std::cout << value.serializingAlbum() << std::endl;
+        }
+        //? Reading the amount of packs created
+        std::getline(inputOfCreation, line);
+        std::cout << line << std::endl;
+        auto amount_packs = std::stoi(line);
+        std::cout << "Amount of packs created: " << amount_packs << std::endl;
+        std::vector<SVV1_StickerPack> packsRead;
+        for(size_t index = 0; index < amount_packs; index +=1) {packsRead.emplace_back();}
+        //? Reading the data inside of the packs
+        for(size_t j =0; j < amount_packs; j +=1)
+        {
+            for (size_t index = 0; index < 6; index += 1)
+            {
+                std::getline(inputOfCreation, line);
+                if (std::equal(line.begin(),line.end(), "P"))
+                {
+                    continue;
+                }
+                packsRead.at(j).addStickerToPack(SVV1_GeneralSticker(line));
+            }
+        }
+
+        //?Printing generated packs
+        for(auto const& value: packsRead)
+        {
+            std::cout << "DESERIALIZED PACK" << std::endl;
+            std::cout << value.getSerializedPack() << std::endl;
+        }
     }
 }
+
