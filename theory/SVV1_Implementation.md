@@ -183,7 +183,7 @@ private:
     /* Data member to keep track of instantiation index, given by outside methods defined in later sections*/
     unsigned int StickerPackIndex{0};
     public:
-    /* Public Constructor which will not take any values except for the initial index of instantiation*/
+    /* Public Constructor which will not take any Values except for the initial index of instantiation*/
     [[maybe_unused]] explicit SVV1_StickerPack(unsigned int InstantiationIndexForPack);
     /* Method to Add cards into the pack */
     [[maybe_unused]] SVV1_StickerPack& addStickerToPack(SVV1_GeneralSticker& OtherStickerInstance);
@@ -259,7 +259,7 @@ for loop index and that defines the starting position of each sticker pack after
 <p> After careful consideration and time thinking about how to manage the rolling index, the solution to the problem is presented below,</p>
 
 ```c++
-//Creating packs out of the values given.
+//Creating packs out of the Values given.
         std::vector<SVV1_StickerPack> stickerPacks;
         unsigned int rolling_index = 0;
         for(size_t packNum =0; packNum < amountOfPacks; packNum +=1)
@@ -326,4 +326,176 @@ class SVV1_Album
 ```
 
 <p> As always this is not the entire implementation and other methods will be added inside of the actual class file in this project.</p>
+
+***
+<h6  style="color: antiquewhite; font-family: 'Segoe UI', sans-serif; text-align: center"> File Storing, Serialization Proof Of Concept and Deserialization</h6>
+
+<p> It must come as no surprise that the structure presneted in this document, has in fact, proven to be very easy to work with
+when it comes to serialization of data along with its deserialization. Since we only really have a single function dedicated to
+serialization, which is defined inside of the Sticker Class, we not only, do not need to worry about functions of these types being overwriten
+or even needed in other classes but we have also managed to create a nested connected between them that works flawlessly to give out a constant
+and cohesive structure for serialization of data. An output of such a file, of course an extract is stored like this,</p>
+
+```
+5
+A
+S             Laplace                                           Laplace        17
+S               Joule                                             Joule        11
+S              Cauchy                                            Cauchy        18
+S               Euler                                             Euler        19
+S             Randall                                           Randall         7
+S              Turing                                            Turing        20
+S            Goeppert                                          Goeppert         4
+S             Noether                                           Noether        14
+S             Riemann                                           Riemann        21
+S              Planck                                            Planck         1
+S              Teller                                            Teller        12
+S           Pointcare                                         Pointcare        16
+S             Germain                                           Germain        23
+S                Kaku                                              Kaku         5
+S          Heisenberg                                        Heisenberg         3
+S          Sommerfeld                                        Sommerfeld        13
+S               Rubin                                             Rubin         8
+S             Hawking                                           Hawking        10
+S               Jayam                                             Jayam        24
+S               Bethe                                             Bethe         2
+S              Fermat                                            Fermat        22
+S               Godel                                             Godel        25
+S             Hilbert                                           Hilbert        15
+S               Curie                                             Curie         9
+S            Einstein                                          Einstein         6
+A
+```
+<p> Notice that in this implementation we have a number up on top, which allows the program to read in the amount of albums it has to create
+and beneath it, as a precaution it has the letter stored alongside with it. Since the structure is consistent along every serialization method we can see that it looks
+more like a little table of data rather than a collection of stickers. Thankfully our previously defined deserialization function is very capable of 
+taking this input and moving through it with ease to create the objects required. For this we have devised the following method,</p>
+
+```c++
+
+try {
+std::ifstream inputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::in);
+
+std::string line;
+std::getline(inputOfCreation, line);
+//? Reading the first line which is the amount of albums created
+auto amount_albums = std::stoi(line);
+std::cout << "Amount of albums created: " << amount_albums << std::endl;
+std::vector<SVV1_Album> abumsRead;
+for (size_t index = 0; index < amount_albums; index +=1) { abumsRead.emplace_back(); }
+//? Reading the data inside of the albums
+
+for (size_t j =0; j < amount_albums; j +=1)
+{
+for (size_t index = 1; index <= SVV1_ExecutionConstants::LINE_JUMPS_FOR_ALBUM_STICKERS; index += 1) {
+std::getline(inputOfCreation, line);
+if (std::equal(line.begin(), line.end(), "A")) {
+continue;
+}
+std::cout << line << std::endl;
+abumsRead.at(j).emplaceAStickerOnAlbum(SVV1_GeneralSticker(line));
+}
+}
+
+for (auto const& value: abumsRead)
+{
+std::cout << "DESERIALIZED ALBUM" << std::endl;
+std::cout << value.serializingAlbum() << std::endl;
+}
+//? Reading the amount of packs created
+std::getline(inputOfCreation, line);
+std::cout << line << std::endl;
+auto amount_packs = std::stoi(line);
+std::cout << "Amount of packs created: " << amount_packs << std::endl;
+std::vector<SVV1_StickerPack> packsRead;
+for (size_t index = 0; index < amount_packs; index +=1) { packsRead.emplace_back(); }
+//? Reading the data inside of the packs
+for (size_t j =0; j < amount_packs; j +=1)
+{
+for (size_t index = 0; index < SVV1_ExecutionConstants::LINE_JUMPS_FOR_PACK_STICKERS; index += 1) {
+std::getline(inputOfCreation, line);
+if (std::equal(line.begin(), line.end(), "P")) {
+continue;
+}
+packsRead.at(j).addStickerToPack(SVV1_GeneralSticker(line));
+}
+}
+}
+catch(...)
+{
+std::cout << "Errors when reading the file, it must have been corrupted, we have to delete it for the program to work" << std::endl;
+}
+
+//?Printing generated packs
+for(auto const& value: packsRead)
+{
+std::cout << "DESERIALIZED PACK" << std::endl;
+std::cout << value.getSerializedPack() << std::endl;
+}
+}try {
+std::ifstream inputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::in);
+
+std::string line;
+std::getline(inputOfCreation, line);
+//? Reading the first line which is the amount of albums created
+auto amount_albums = std::stoi(line);
+std::cout << "Amount of albums created: " << amount_albums << std::endl;
+std::vector<SVV1_Album> abumsRead;
+for (size_t index = 0; index < amount_albums; index +=1) { abumsRead.emplace_back(); }
+//? Reading the data inside of the albums
+
+for (size_t j =0; j < amount_albums; j +=1)
+{
+for (size_t index = 1; index <= SVV1_ExecutionConstants::LINE_JUMPS_FOR_ALBUM_STICKERS; index += 1) {
+std::getline(inputOfCreation, line);
+if (std::equal(line.begin(), line.end(), "A")) {
+continue;
+}
+std::cout << line << std::endl;
+abumsRead.at(j).emplaceAStickerOnAlbum(SVV1_GeneralSticker(line));
+}
+}
+
+for (auto const& value: abumsRead)
+{
+std::cout << "DESERIALIZED ALBUM" << std::endl;
+std::cout << value.serializingAlbum() << std::endl;
+}
+//? Reading the amount of packs created
+std::getline(inputOfCreation, line);
+std::cout << line << std::endl;
+auto amount_packs = std::stoi(line);
+std::cout << "Amount of packs created: " << amount_packs << std::endl;
+std::vector<SVV1_StickerPack> packsRead;
+for (size_t index = 0; index < amount_packs; index +=1) { packsRead.emplace_back(); }
+//? Reading the data inside of the packs
+for (size_t j =0; j < amount_packs; j +=1)
+{
+for (size_t index = 0; index < SVV1_ExecutionConstants::LINE_JUMPS_FOR_PACK_STICKERS; index += 1) {
+std::getline(inputOfCreation, line);
+if (std::equal(line.begin(), line.end(), "P")) {
+continue;
+}
+packsRead.at(j).addStickerToPack(SVV1_GeneralSticker(line));
+}
+}
+}
+catch(...)
+{
+std::cout << "Errors when reading the file, it must have been corrupted, we have to delete it for the program to work" << std::endl;
+}
+
+//?Printing generated packs
+for(auto const& value: packsRead)
+{
+std::cout << "DESERIALIZED PACK" << std::endl;
+std::cout << value.getSerializedPack() << std::endl;
+}
+}
+```
+
+<p> As can be noted inside of the file, there are a series of functions and loops that allow us to read values into the different object categories using a single serialization method.
+Along in this file there is also another surprise I thought I would try inside of this project, using namespaces declared in another file for safekeeping information, which for now has worked wonders to keep my project 
+self documenting.</p>
+
 

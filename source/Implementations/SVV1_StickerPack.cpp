@@ -4,10 +4,10 @@
 ?2. Definition: General Sticker Pack Class Definition
 ?3. Directions: New methods must be added in their corresponding sections, consider headings defined by //!
 -----------------------------------------------**/
-#include <string>
 #include "../Headers/SVV1_StickerPack.hpp"
+#include "../values/SVV1_ExecutionConstants.hpp"
+#include <string>
 #include <vector>
-#include <exception>
 #include <stdexcept>
 #include <sstream>
 
@@ -20,7 +20,7 @@ const char SVV1_StickerPack::PACK_INDICATOR = 'P';
 //! Definition of Appending Methods
 SVV1_StickerPack &SVV1_StickerPack::addStickerToPack(const SVV1_GeneralSticker& OtherStickerInstance)
 {
-    if (SVV1_StickerPack::DataValueArrayHolder.size() < 5)
+    if (SVV1_StickerPack::DataValueArrayHolder.size() < SVV1_ExecutionConstants::PACK_MAX_STICKERS)
     {
         this->DataValueArrayHolder.push_back(OtherStickerInstance);
     }
@@ -35,7 +35,7 @@ std::vector<SVV1_GeneralSticker> SVV1_StickerPack::getDataArray() const {return 
 
 SVV1_GeneralSticker SVV1_StickerPack::getStickerAtLocationInVector(size_t indexOfSticker)
 {
-    if (indexOfSticker >= 0 && indexOfSticker < 5)
+    if (indexOfSticker >= 0 && indexOfSticker < SVV1_ExecutionConstants::PACK_MAX_STICKERS)
     {
         return this->DataValueArrayHolder[indexOfSticker];
     }

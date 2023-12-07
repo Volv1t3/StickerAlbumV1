@@ -19,7 +19,7 @@ private:
     /* Data member to keep track of instantiation index, given by outside methods defined in later sections*/
     unsigned int StickerPackIndex{0};
 public:
-    /* Public Constructor which will not take any values except for the initial index of instantiation*/
+    /* Public Constructor which will not take any Values except for the initial index of instantiation*/
     [[maybe_unused]] explicit SVV1_StickerPack() = default;
     /* Method to Add cards into the pack */
     [[maybe_unused]] SVV1_StickerPack& addStickerToPack(const SVV1_GeneralSticker& OtherStickerInstance);

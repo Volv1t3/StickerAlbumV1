@@ -60,7 +60,7 @@ int main()
         {
             std::cout << value.createSerializedString() << std::endl;
         }
-        //Creating packs out of the values given.
+        //Creating packs out of the Values given.
         std::vector<SVV1_StickerPack> stickerPacks;
         size_t packSize = 5;
         for(size_t packNum =0; packNum < stickers.size() / packSize; packNum +=1)
@@ -101,7 +101,7 @@ int main()
             }
         }
 
-        //! Printing values inside of each album
+        //! Printing Values inside of each album
 
         for(auto const& value: albums)
         {

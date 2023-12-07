@@ -13,6 +13,7 @@
 #include "./../source/Implementations/SVV1_GeneralSticker.cpp"
 #include "./../source/Implementations/SVV1_StickerPack.cpp"
 #include "./../source/Implementations/SVV1_Album.cpp"
+#include "./../source/values/SVV1_ExecutionConstants.hpp"
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -27,25 +28,21 @@ int main()
         int numberOfAlbums{0};
         cout << "Enter how many albums you want to fill out... "; cin >> numberOfAlbums;
         //! Define holders
-        const std::array<std::string, 25> CardNames{"Planck", "Bethe",
-                                                    "Heisenberg", "Goeppert"
-                ,"Kaku","Einstein", "Randall", "Rubin", "Curie","Hawking","Joule",
-                                                    "Teller","Sommerfeld","Noether","Hilbert","Pointcare","Laplace","Cauchy",
-                                                    "Euler", "Turing","Riemann","Fermat","Germain","Jayam","Godel"};
 
         std::vector<SVV1_GeneralSticker> stickers;
         //? Define working constants
-        auto amountOfPacks = numberOfAlbums * 5;
-        auto amountOfStickers = numberOfAlbums * 25;
+        auto amountOfPacks = numberOfAlbums * SVV1_ExecutionConstants::PACK_MAX_STICKERS;
+        auto amountOfStickers = numberOfAlbums * SVV1_ExecutionConstants::STICKER_MAX_VALUE;
         //? Create the stickers using amount of stickers
         int counter{0};
-        for(size_t repetition = 0; repetition < 25; repetition +=1)
+        for(size_t repetition = 0; repetition < SVV1_ExecutionConstants::STICKER_MAX_VALUE; repetition +=1)
         {
             for(size_t index = 0; index < numberOfAlbums; index +=1)
             {
                 stickers.push_back(SVV1_GeneralSticker(
                         repetition + 1,
-                        CardNames[repetition % 25], CardNames[repetition % 25]));
+                        SVV1_CardNames::CardNames[repetition % SVV1_ExecutionConstants::STICKER_MAX_VALUE],
+                        SVV1_CardNames::CardNames[repetition % SVV1_ExecutionConstants::STICKER_MAX_VALUE]));
                 counter +=1;
             }
         }
@@ -61,15 +58,14 @@ int main()
         {
             std::cout << value.createSerializedString() << std::endl;
         }
-        //Creating packs out of the values given.
+        //Creating packs out of the Values given.
         std::vector<SVV1_StickerPack> stickerPacks;
-        size_t packSize = 5;
-        for(size_t packNum =0; packNum < stickers.size() / packSize; packNum +=1)
+        for(size_t packNum =0; packNum < stickers.size() / SVV1_ExecutionConstants::PACK_MAX_STICKERS; packNum +=1)
         {
             stickerPacks.push_back(SVV1_StickerPack());
-            for(size_t i = 0; i < packSize; i +=1)
+            for(size_t i = 0; i < SVV1_ExecutionConstants::PACK_MAX_STICKERS; i +=1)
             {
-                size_t actualIndex = packNum*packSize + i;
+                size_t actualIndex = packNum*SVV1_ExecutionConstants::PACK_MAX_STICKERS + i;
                 stickerPacks[packNum].addStickerToPack(stickers.at(actualIndex));
             }
         }
@@ -101,7 +97,7 @@ int main()
             }
         }
 
-        //! Printing values inside of each album
+        //! Printing Values inside of each album
 
         for(auto const& value: albums)
         {
@@ -109,7 +105,8 @@ int main()
         }
 
 
-        std::ofstream outputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::out);
+        std::ofstream outputOfCreation(SVV1_ExecutionConstants::FILE_NAME, std::ios::out);
+
         //? Defining the amount of albums the user created
         outputOfCreation << numberOfAlbums << "\n";
         //? Serializing the data inside album first;
@@ -127,7 +124,8 @@ int main()
         //? With the data created I would like to open the file and read from it to the screen so Im going to send a system cls first
         outputOfCreation.close();
         //? Now I would like to open the file and read from it to the screen
-        std::ifstream inputOfCreation("ResultsOfCreationOfPacks.txt", std::ios::in);
+        try {
+            std::ifstream  inputOfCreation(SVV1_ExecutionConstants::FILE_NAME, std::ios::in);
 
         std::string line;
         std::getline(inputOfCreation, line);
@@ -135,15 +133,14 @@ int main()
         auto amount_albums = std::stoi(line);
         std::cout << "Amount of albums created: " << amount_albums << std::endl;
         std::vector<SVV1_Album> abumsRead;
-        for(size_t index = 0; index < amount_albums; index +=1) {abumsRead.emplace_back();}
+        for (size_t index = 0; index < amount_albums; index +=1) { abumsRead.emplace_back(); }
         //? Reading the data inside of the albums
 
-        for(size_t j =0; j < amount_albums; j +=1)
+        for (size_t j =0; j < amount_albums; j +=1)
         {
-            for (size_t index = 1; index <= 26; index += 1) {
+            for (size_t index = 1; index <= SVV1_ExecutionConstants::LINE_JUMPS_FOR_ALBUM_STICKERS; index += 1) {
                 std::getline(inputOfCreation, line);
-                if (std::equal(line.begin(),line.end(), "A"))
-                {
+                if (std::equal(line.begin(), line.end(), "A")) {
                     continue;
                 }
                 std::cout << line << std::endl;
@@ -151,7 +148,7 @@ int main()
             }
         }
 
-        for(auto const& value: abumsRead)
+        for (auto const& value: abumsRead)
         {
             std::cout << "DESERIALIZED ALBUM" << std::endl;
             std::cout << value.serializingAlbum() << std::endl;
@@ -162,27 +159,31 @@ int main()
         auto amount_packs = std::stoi(line);
         std::cout << "Amount of packs created: " << amount_packs << std::endl;
         std::vector<SVV1_StickerPack> packsRead;
-        for(size_t index = 0; index < amount_packs; index +=1) {packsRead.emplace_back();}
+        for (size_t index = 0; index < amount_packs; index +=1) { packsRead.emplace_back(); }
         //? Reading the data inside of the packs
-        for(size_t j =0; j < amount_packs; j +=1)
+        for (size_t j =0; j < amount_packs; j +=1)
         {
-            for (size_t index = 0; index < 6; index += 1)
-            {
+            for (size_t index = 0; index < SVV1_ExecutionConstants::LINE_JUMPS_FOR_PACK_STICKERS; index += 1) {
                 std::getline(inputOfCreation, line);
-                if (std::equal(line.begin(),line.end(), "P"))
-                {
+                if (std::equal(line.begin(), line.end(), "P")) {
                     continue;
                 }
                 packsRead.at(j).addStickerToPack(SVV1_GeneralSticker(line));
             }
         }
-
-        //?Printing generated packs
-        for(auto const& value: packsRead)
-        {
-            std::cout << "DESERIALIZED PACK" << std::endl;
-            std::cout << value.getSerializedPack() << std::endl;
+            //?Printing generated packs
+            for(auto const& value: packsRead)
+            {
+                std::cout << "DESERIALIZED PACK" << std::endl;
+                std::cout << value.getSerializedPack() << std::endl;
+            }
         }
+        catch(...)
+        {
+            std::cout << "Errors when reading the file, it must have been corrupted, we have to delete it for the program to work" << std::endl;
+        }
+
+
     }
 }
 

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iomanip>
 #include "../Headers/SVV1_GeneralSticker.hpp"
+#include "../values/SVV1_ExecutionConstants.hpp"
 
 //! Static Definitions
 
@@ -58,9 +59,9 @@ bool SVV1_GeneralSticker::operator==(const SVV1_GeneralSticker &OtherInstance) c
 {
     std::stringstream SerializedString;
     SerializedString << SVV1_GeneralSticker::STICKER_INDICATOR
-    <<  std::setw(20) << std::right << this->NameOfSticker
-    << std::setw(50) << std::right << this->DescriptionOfSticker
-    << std::setw(10) << std::right << this->ValueOfSticker
+    <<  std::setw(SVV1_ExecutionConstants::STICKER_NAME_LENGTH) << std::right << this->NameOfSticker
+    << std::setw(SVV1_ExecutionConstants::STICKER_DESCRIPTION_LENGTH) << std::right << this->DescriptionOfSticker
+    << std::setw(SVV1_ExecutionConstants::STICKER_VALUE_LENGTH) << std::right << this->ValueOfSticker
     << "\n";
     return SerializedString.str();
 }
@@ -69,7 +70,7 @@ bool SVV1_GeneralSticker::operator==(const SVV1_GeneralSticker &OtherInstance) c
 
 SVV1_GeneralSticker& SVV1_GeneralSticker::updateDescriptionOfSticker(const std::string &NewDescriptionOfSticker)
 {
-    if (NewDescriptionOfSticker.length() > 0 && NewDescriptionOfSticker.length() <= 50) {
+    if (NewDescriptionOfSticker.length() > 0 && NewDescriptionOfSticker.length() <= SVV1_ExecutionConstants::STICKER_DESCRIPTION_LENGTH) {
         this->DescriptionOfSticker = NewDescriptionOfSticker;
     }
     else
@@ -82,7 +83,8 @@ SVV1_GeneralSticker& SVV1_GeneralSticker::updateDescriptionOfSticker(const std::
 
 SVV1_GeneralSticker& SVV1_GeneralSticker::updateValueOfSticker(unsigned int NewValueOfSticker)
 {
-    if  (NewValueOfSticker >= 0 && NewValueOfSticker <= 25) { this->ValueOfSticker = NewValueOfSticker;}
+    if  (NewValueOfSticker >= 0 && NewValueOfSticker <= SVV1_ExecutionConstants::STICKER_MAX_VALUE)
+    { this->ValueOfSticker = NewValueOfSticker;}
     else {this->ValueOfSticker = 0;}
 
     return *this;
@@ -90,7 +92,8 @@ SVV1_GeneralSticker& SVV1_GeneralSticker::updateValueOfSticker(unsigned int NewV
 
 SVV1_GeneralSticker &SVV1_GeneralSticker::updateNameOfSticker(const std::string &NewStickerName)
 {
-    if (NewStickerName.length() > 0 && NewStickerName.length() <= 20) { this->NameOfSticker = NewStickerName;}
+    if (NewStickerName.length() > 0 && NewStickerName.length() <= SVV1_ExecutionConstants::STICKER_NAME_LENGTH)
+    { this->NameOfSticker = NewStickerName;}
     else {this->NameOfSticker = "No Name";}
 
     return *this;
@@ -98,11 +101,11 @@ SVV1_GeneralSticker &SVV1_GeneralSticker::updateNameOfSticker(const std::string 
 
 void SVV1_GeneralSticker::ReadFromSerializedString(const std::string &SerializedPartialString)
 {
-    std::string ReadNameOfSticker = SerializedPartialString.substr(1,20);
+    std::string ReadNameOfSticker = SerializedPartialString.substr(1,SVV1_ExecutionConstants::STICKER_NAME_LENGTH);
     this->updateNameOfSticker(ReadNameOfSticker);
-    std::string ReadDescriptionOfSticker = SerializedPartialString.substr(21,50);
+    std::string ReadDescriptionOfSticker = SerializedPartialString.substr(21,SVV1_ExecutionConstants::STICKER_DESCRIPTION_LENGTH);
     this->updateDescriptionOfSticker(ReadDescriptionOfSticker);
-    std::string ReadValueOfSticker = SerializedPartialString.substr(71,10);
+    std::string ReadValueOfSticker = SerializedPartialString.substr(71, SVV1_ExecutionConstants::STICKER_VALUE_LENGTH);
     this->updateValueOfSticker(std::stoi(ReadValueOfSticker));
 }
 

@@ -5,6 +5,7 @@
 ?3. Directions: Class has been implemented, new methods have to be unit and integration tested
 -----------------------------------------------**/
 #include "../Headers/SVV1_Album.hpp"
+#include "../values/SVV1_ExecutionConstants.hpp"
 #include <exception>
 #include <stdexcept>
 #include <sstream>
@@ -17,7 +18,7 @@ const char SVV1_Album::ALBUM_INDICATOR = 'A';
 SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& StickerInstance)
 {
     //? Base step, check if the size of the album is still less than 25 or else raise an error
-    if (this->AlbumStickerObjects.size() < 25)
+    if (this->AlbumStickerObjects.size() < SVV1_ExecutionConstants::ALBUM_MAX_STICKERS)
     {
         bool InitialCheckResult = false;
         //? Inductive Step 1: Check if the card is there by iterating over the length of the vector.
@@ -62,9 +63,3 @@ std::string SVV1_Album::serializingAlbum() const
     return SerializedString.str();
 }
 
-//! Implementing Deserialization method
-
-//void SVV1_Album::deserializingAlbum()
-//{
-//
-//}

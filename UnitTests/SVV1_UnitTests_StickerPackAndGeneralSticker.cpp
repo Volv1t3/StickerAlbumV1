@@ -113,7 +113,7 @@ int main()
             std::cout << value.createSerializedString() << std::endl;
         }
         size_t start_index = 0;
-        //Creating packs out of the values given.
+        //Creating packs out of the Values given.
         std::vector<SVV1_StickerPack> stickerPacks;
         for(size_t packNum =0; packNum < amountOfPacks; packNum +=1)
         {

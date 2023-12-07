@@ -15,6 +15,8 @@ set(PROJECT_DESCRIPTION "Representacion Por Medio de OOP de un Album de Cromos")
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(StickerAlbumV1 main.cpp
+        #Files for Execution Constants
+        source/Values/SVV1_ExecutionConstants.hpp
         #Files For General Sticker Class
         source/Implementations/SVV1_GeneralSticker.cpp
         source/Headers/SVV1_GeneralSticker.hpp
@@ -27,4 +29,5 @@ add_executable(StickerAlbumV1 main.cpp
         #Files for Utilities Functional Programming Modules
         source/Headers/SVV1_Utilities.hpp
         source/Implementations/SVV1_Utilities.cpp
+
 )
