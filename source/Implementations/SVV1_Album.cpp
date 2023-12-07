@@ -10,6 +10,9 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+#include <utility>
+#include <iomanip>
 
 //! Implementing class constant
 const char SVV1_Album::ALBUM_INDICATOR = 'A';
@@ -18,7 +21,6 @@ const char SVV1_Album::ALBUM_INDICATOR = 'A';
 
 SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& StickerInstance)
 {
-    if (StickerInstance.getValueOfSticker() != 0) {
         //? Base step, check if the size of the album is still less than 25 or else raise an error
         if (this->AlbumStickerObjects.size() < SVV1_ExecutionConstants::ALBUM_MAX_STICKERS) {
             bool InitialCheckResult = false;
@@ -36,12 +38,16 @@ SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& Sticke
             } else {
                 RepeatedStickers.push_back(StickerInstance);
             }
-        } else {
-            throw std::out_of_range("Error Code 0x001 [Raised] - Album is Already Full");
         }
+        else {
+            RepeatedStickers.push_back(StickerInstance);
+        }
+    return *this;
+}
 
-    }
-
+SVV1_Album &SVV1_Album::emplaceRepeatedSticker(const SVV1_GeneralSticker &StickerInstance)
+{
+    this->RepeatedStickers.push_back(StickerInstance);
     return *this;
 }
 
@@ -53,15 +59,54 @@ std::string SVV1_Album::serializingAlbum() const
     SerializedString << ALBUM_INDICATOR << "\n";
     for(size_t index = 0 ; index < this->AlbumStickerObjects.size() ; ++index)
     {
-        if (this->Album.at(index) == this->AlbumStickerObjects.at(index).getValueOfSticker()) {
-            SerializedString << AlbumStickerObjects.at(index).createSerializedString();
-        }
-        else
-        {
-            std::cout << std::endl;
-        }
+        SerializedString << AlbumStickerObjects.at(index).createSerializedString();
     }
 
     return SerializedString.str();
 }
 
+std::string SVV1_Album::serializingRepeatedStickers() const
+{
+    std::stringstream  SerializedRepeatedStream;
+    SerializedRepeatedStream << "R" << "\n";
+    for(size_t index = 0 ; index < this->RepeatedStickers.size(); ++index)
+    {
+        SerializedRepeatedStream << RepeatedStickers.at(index).createSerializedString();
+    }
+    return SerializedRepeatedStream.str();
+}
+
+//! Implementing a method to determine if album is full
+bool SVV1_Album::isFull()
+{
+    if(this->AlbumStickerObjects.size() == SVV1_ExecutionConstants::ALBUM_MAX_STICKERS) {this->isComplete = true;}
+    else {this->isComplete = false;}
+
+    return this->isComplete;
+}
+
+
+//! Implementing a Method to Print the Album
+bool SVV1_Album::printingAlbumData() const
+{
+    //?To do this we can also use the already defined values in the internal array. Using these we can also use that to print
+    //? each value for the stickers that are stoed, and use said index to gather the name from constants file!!
+    if(this->AlbumStickerObjects.empty())
+    {
+        return false;
+    }
+    else {
+        std::cout << "| Sticker Name |\t| Sticker Value |" << std::endl;
+        for (size_t index = 0; index < this->Album.size(); ++index) {
+            if (this->Album.at(index) == index + 1) // If index of array has a value corresponding to a card
+            {
+                std::cout << "|" << std::setw(16) << std::setfill(' ') << std::right
+                          << SVV1_CardNames::CardNames.at(index)
+                          << "|\t|"
+                          << std::setw(15) << std::right << index << "|" << std::endl;
+            }
+        }
+    }
+
+    return true;
+}

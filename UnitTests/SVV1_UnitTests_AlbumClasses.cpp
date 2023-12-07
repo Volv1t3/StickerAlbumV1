@@ -107,5 +107,15 @@ int main()
         {
             std::cout << value.serializingAlbum();
         }
+
+        for(auto& value: albums)
+        {
+            value.printingAlbumData();
+        }
+
+        for(auto& value: albums)
+        {
+            std::cout << value.serializingAlbum() << std::endl;
+        }
     }
 }

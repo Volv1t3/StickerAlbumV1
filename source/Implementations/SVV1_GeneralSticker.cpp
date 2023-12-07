@@ -52,6 +52,12 @@ bool SVV1_GeneralSticker::operator==(const SVV1_GeneralSticker &OtherInstance) c
 
     return resultOfComparison;
 }
+void SVV1_GeneralSticker::operator=(const SVV1_GeneralSticker &OtherInstance)
+{
+    this->updateDescriptionOfSticker(OtherInstance.getDescriptionOfSticker());
+    this->updateNameOfSticker(OtherInstance.getNameOfSticker());
+    this->updateValueOfSticker(OtherInstance.getValueOfSticker());
+}
 
 //! Method for Returning Serialized String
 
@@ -118,4 +124,5 @@ void SVV1_GeneralSticker::ReadFromSerializedString(const std::string &Serialized
         this->updateValueOfSticker(std::stoi(ReadValueOfSticker));
     }
 }
+
 

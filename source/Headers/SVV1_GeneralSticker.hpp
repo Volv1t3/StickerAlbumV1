@@ -28,6 +28,7 @@ public /* The following section wil hold abstract functionality and the initial 
     [[maybe_unused, nodiscard]] std::string getNameOfSticker() const ;
     /*Operator overloading for ==*/
     bool operator==(const SVV1_GeneralSticker& OtherInstance) const;
+    void operator =(const SVV1_GeneralSticker& OtherInstance);
     /* Method for Returning Serialized String*/
     [[maybe_unused, nodiscard]] std::string createSerializedString() const;
     static const char STICKER_INDICATOR;

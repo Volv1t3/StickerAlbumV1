@@ -17,4 +17,7 @@
 /*Function to print initial message and general program information*/
 [[maybe_unused]] void UtilPrintingApplicationInformation();
 [[maybe_unused]] void UtilPrintLongMessageOnPredefLength(std::string MessageToPrint);
+[[maybe_unused, nodiscard]] std::string UtilReturnLineOnScreen();
+
+
 #endif //STICKERALBUMV1_SVV1_UTILITIES_HPP

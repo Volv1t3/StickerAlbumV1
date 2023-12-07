@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <vector>
+#include <sstream>
 #include "./../Headers/SVV1_Utilities.hpp"
 
 
@@ -18,7 +19,7 @@
 //! Metdho for printing a 120 character line on the screen
 [[maybe_unused]] void UtilPrintLineOnScreen()
 {
-    std::cout << std::setw(119) << std::setfill('=') << ""<< "\n";
+    std::cout << std::setw(118) << std::setfill('=') << ""<< "\n";
 }
 
 [[maybe_unused]] void UtilPrintTextWithinScreen(const std::string& MessageToPrint)
@@ -99,3 +100,9 @@
             std::cout << line << "\n";
         }
     }
+
+[[maybe_unused, nodiscard]] std::string UtilReturnLineOnScreen() {
+        std::stringstream LineStream;
+        LineStream << std::setw(119) << std::setfill('=') << ""<< "\n";
+        return LineStream.str();
+}

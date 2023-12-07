@@ -14,6 +14,8 @@
 #include "./../source/Implementations/SVV1_StickerPack.cpp"
 #include "./../source/Implementations/SVV1_Album.cpp"
 #include "./../source/values/SVV1_ExecutionConstants.hpp"
+#include "./../source/Headers/SVV1_Utilities.hpp"
+#include "./../source/Implementations/SVV1_Utilities.cpp"
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -113,7 +115,11 @@ int main()
         for(auto const& value: albums)
         {
             outputOfCreation << value.serializingAlbum();
+            outputOfCreation << value.serializingRepeatedStickers();
         }
+
+
+        outputOfCreation << UtilReturnLineOnScreen();
         //? Serializing the data inside pack
         outputOfCreation << amountOfPacks << "\n";
         for(auto const& value: stickerPacks)

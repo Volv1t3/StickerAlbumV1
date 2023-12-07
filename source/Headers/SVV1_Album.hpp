@@ -27,12 +27,16 @@ public:
     [[maybe_unused]] SVV1_Album()=default;
     /*Method to add a Cart to the album, it itself will check if it's already there*/
     [[maybe_unused]] SVV1_Album& emplaceAStickerOnAlbum(const SVV1_GeneralSticker& StickerInstance);
+    [[maybe_unused]] SVV1_Album& emplaceRepeatedSticker(const SVV1_GeneralSticker& StickerInstance);
     /*Method for Serializing the Album*/
     [[maybe_unused, nodiscard]] std::string serializingAlbum() const ;
+    [[maybe_unused, nodiscard]] std::string serializingRepeatedStickers() const;
    // [[maybe_unused]] void deserializingAlbum(std::string SerializedAlbumEntryString);
     /*Public Constant such that we have a way to know this is an Album Class*/
     const static char ALBUM_INDICATOR;
     /*Method for Data Visualizatnio in form of a table of numbers and names */
-    // [[maybe_unused]] void printingAlbumData();
+    [[maybe_unused, nodiscard]] bool printingAlbumData() const;
+    /*Method for Returning if the Album is Full*/
+    [[maybe_unused,nodiscard]] bool isFull();
 };
 #endif //STICKERALBUMV1_SVV1_ALBUM_HPP
