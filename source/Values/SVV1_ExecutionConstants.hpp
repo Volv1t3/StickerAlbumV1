@@ -22,7 +22,7 @@ namespace SVV1_ExecutionConstants
     //? Defining the third set of constants : Values for Album Generation
     static const int ALBUM_MAX_STICKERS = 25;
     //? Defining the fourth set of constants : Values for File Creation && Reading
-    static const std::string FILE_NAME = "SVV1StickerAlbumV1DUMP.txt";
+    static const std::string FILE_NAME = "StickerAlbumV1DUMP.txt";
     static const int LINE_JUMPS_FOR_ALBUM_STICKERS = 26;
     static const int LINE_JUMPS_FOR_PACK_STICKERS = 6;
 }

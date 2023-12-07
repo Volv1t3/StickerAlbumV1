@@ -9,6 +9,7 @@
 #include <exception>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 //! Implementing class constant
 const char SVV1_Album::ALBUM_INDICATOR = 'A';
@@ -17,33 +18,28 @@ const char SVV1_Album::ALBUM_INDICATOR = 'A';
 
 SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& StickerInstance)
 {
-    //? Base step, check if the size of the album is still less than 25 or else raise an error
-    if (this->AlbumStickerObjects.size() < SVV1_ExecutionConstants::ALBUM_MAX_STICKERS)
-    {
-        bool InitialCheckResult = false;
-        //? Inductive Step 1: Check if the card is there by iterating over the length of the vector.
-        for(size_t index = 0; index < this->Album.size(); index +=1)
-        {
-            if (this->Album.at(index) == StickerInstance.getValueOfSticker())
-            {
-                InitialCheckResult = true;
-                break;
+    if (StickerInstance.getValueOfSticker() != 0) {
+        //? Base step, check if the size of the album is still less than 25 or else raise an error
+        if (this->AlbumStickerObjects.size() < SVV1_ExecutionConstants::ALBUM_MAX_STICKERS) {
+            bool InitialCheckResult = false;
+            //? Inductive Step 1: Check if the card is there by iterating over the length of the vector.
+            for (size_t index = 0; index < this->Album.size(); index += 1) {
+                if (this->Album.at(index) == StickerInstance.getValueOfSticker()) {
+                    InitialCheckResult = true;
+                    break;
+                }
             }
+            if (!InitialCheckResult) {
+                //? Inductive Step 2: Since the card has not been pushed inside of the vector we emplace it on the back
+                this->Album.at(StickerInstance.getValueOfSticker() - 1) = StickerInstance.getValueOfSticker();
+                this->AlbumStickerObjects.push_back(StickerInstance);
+            } else {
+                RepeatedStickers.push_back(StickerInstance);
+            }
+        } else {
+            throw std::out_of_range("Error Code 0x001 [Raised] - Album is Already Full");
         }
-        if (!InitialCheckResult)
-        {
-            //? Inductive Step 2: Since the card has not been pushed inside of the vector we emplace it on the back
-            this->Album.at(StickerInstance.getValueOfSticker()-1) = StickerInstance.getValueOfSticker();
-            this->AlbumStickerObjects.push_back(StickerInstance);
-        }
-        else
-        {
-            RepeatedStickers.push_back(StickerInstance);
-        }
-    }
-    else
-    {
-        throw std::out_of_range("Error Code 0x001 [Raised] - Album is Already Full");
+
     }
 
     return *this;
@@ -57,7 +53,13 @@ std::string SVV1_Album::serializingAlbum() const
     SerializedString << ALBUM_INDICATOR << "\n";
     for(size_t index = 0 ; index < this->AlbumStickerObjects.size() ; ++index)
     {
-        SerializedString << AlbumStickerObjects.at(index).createSerializedString();
+        if (this->Album.at(index) == this->AlbumStickerObjects.at(index).getValueOfSticker()) {
+            SerializedString << AlbumStickerObjects.at(index).createSerializedString();
+        }
+        else
+        {
+            std::cout << std::endl;
+        }
     }
 
     return SerializedString.str();

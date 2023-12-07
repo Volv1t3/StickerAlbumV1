@@ -101,11 +101,21 @@ SVV1_GeneralSticker &SVV1_GeneralSticker::updateNameOfSticker(const std::string 
 
 void SVV1_GeneralSticker::ReadFromSerializedString(const std::string &SerializedPartialString)
 {
-    std::string ReadNameOfSticker = SerializedPartialString.substr(1,SVV1_ExecutionConstants::STICKER_NAME_LENGTH);
-    this->updateNameOfSticker(ReadNameOfSticker);
-    std::string ReadDescriptionOfSticker = SerializedPartialString.substr(21,SVV1_ExecutionConstants::STICKER_DESCRIPTION_LENGTH);
-    this->updateDescriptionOfSticker(ReadDescriptionOfSticker);
-    std::string ReadValueOfSticker = SerializedPartialString.substr(71, SVV1_ExecutionConstants::STICKER_VALUE_LENGTH);
-    this->updateValueOfSticker(std::stoi(ReadValueOfSticker));
+    if (SerializedPartialString.empty())
+    {
+        this->updateNameOfSticker("No Name");
+        this->updateDescriptionOfSticker("No Description");
+        this->updateValueOfSticker(0);
+    }
+    else {
+        std::string ReadNameOfSticker = SerializedPartialString.substr(1, SVV1_ExecutionConstants::STICKER_NAME_LENGTH);
+        this->updateNameOfSticker(ReadNameOfSticker);
+        std::string ReadDescriptionOfSticker = SerializedPartialString.substr(21,
+                                                                              SVV1_ExecutionConstants::STICKER_DESCRIPTION_LENGTH);
+        this->updateDescriptionOfSticker(ReadDescriptionOfSticker);
+        std::string ReadValueOfSticker = SerializedPartialString.substr(71,
+                                                                        SVV1_ExecutionConstants::STICKER_VALUE_LENGTH);
+        this->updateValueOfSticker(std::stoi(ReadValueOfSticker));
+    }
 }
 
