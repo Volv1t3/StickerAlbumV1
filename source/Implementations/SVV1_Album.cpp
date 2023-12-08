@@ -36,6 +36,7 @@ SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& Sticke
                 this->Album.at(StickerInstance.getValueOfSticker() - 1) = StickerInstance.getValueOfSticker();
                 this->AlbumStickerObjects.push_back(StickerInstance);
             } else {
+                this->FrecuencyOfRepeatedValues.at(StickerInstance.getValueOfSticker() - 1) += 1;
                 RepeatedStickers.push_back(StickerInstance);
             }
         }
@@ -47,6 +48,7 @@ SVV1_Album &SVV1_Album::emplaceAStickerOnAlbum(const SVV1_GeneralSticker& Sticke
 
 SVV1_Album &SVV1_Album::emplaceRepeatedSticker(const SVV1_GeneralSticker &StickerInstance)
 {
+    this->FrecuencyOfRepeatedValues.at(StickerInstance.getValueOfSticker() - 1) += 1;
     this->RepeatedStickers.push_back(StickerInstance);
     return *this;
 }
@@ -77,25 +79,21 @@ std::string SVV1_Album::serializingRepeatedStickers() const
 }
 
 //! Implementing a method to determine if album is full
-bool SVV1_Album::isFull()
+bool SVV1_Album::isFull() const
 {
-    if(this->AlbumStickerObjects.size() == SVV1_ExecutionConstants::ALBUM_MAX_STICKERS) {this->isComplete = true;}
-    else {this->isComplete = false;}
+    bool ResultCheck = false;
+    if(this->AlbumStickerObjects.size() == SVV1_ExecutionConstants::ALBUM_MAX_STICKERS) {ResultCheck = true;}
+    else {ResultCheck = false;}
 
-    return this->isComplete;
+    return ResultCheck;
 }
 
 
 //! Implementing a Method to Print the Album
-bool SVV1_Album::printingAlbumData() const
+void  SVV1_Album::printingAlbumData() const
 {
     //?To do this we can also use the already defined values in the internal array. Using these we can also use that to print
     //? each value for the stickers that are stoed, and use said index to gather the name from constants file!!
-    if(this->AlbumStickerObjects.empty())
-    {
-        return false;
-    }
-    else {
         std::cout << "| Sticker Name |\t| Sticker Value |" << std::endl;
         for (size_t index = 0; index < this->Album.size(); ++index) {
             if (this->Album.at(index) == index + 1) // If index of array has a value corresponding to a card
@@ -103,10 +101,26 @@ bool SVV1_Album::printingAlbumData() const
                 std::cout << "|" << std::setw(16) << std::setfill(' ') << std::right
                           << SVV1_CardNames::CardNames.at(index)
                           << "|\t|"
-                          << std::setw(15) << std::right << index << "|" << std::endl;
+                          << std::setw(15) << std::right << index + 1 << "|" << std::endl;
+            }
+            else
+            {
+                std::cout << "|" << std::setw(16) << std::setfill(' ') << std::right
+                << "Falta Sticker" << "|\t|"
+                << std::setw(15) << std::right << 0 << "|" << std::endl;
             }
         }
     }
 
-    return true;
+    //! Method for printing frecuency of repeated values
+
+void SVV1_Album::printingRepeatedFrecuency() const
+{
+    std::cout << "| Sticker Name |\t| Sticker Value |" << std::endl;
+    for (size_t index = 0; index < this->FrecuencyOfRepeatedValues.size(); ++index) {
+        std::cout << "|" << std::setw(16) << std::setfill(' ') << std::right
+                  << SVV1_CardNames::CardNames.at(index)
+                  << "|\t|"
+                  << std::setw(15) << std::right << this->FrecuencyOfRepeatedValues.at(index)<< "|" << std::endl;
+    }
 }

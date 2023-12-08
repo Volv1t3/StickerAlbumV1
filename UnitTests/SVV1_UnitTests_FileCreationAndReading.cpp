@@ -117,8 +117,6 @@ int main()
             outputOfCreation << value.serializingAlbum();
             outputOfCreation << value.serializingRepeatedStickers();
         }
-
-
         outputOfCreation << UtilReturnLineOnScreen();
         //? Serializing the data inside pack
         outputOfCreation << amountOfPacks << "\n";

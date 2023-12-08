@@ -59,6 +59,17 @@ std::string SVV1_StickerPack::getSerializedPack() const
     return SerializedStream.str();
 }
 
+
+//! Definition for Printing Pack
+std::string SVV1_StickerPack::getStringPack() const {
+    std::stringstream SerializedStream;
+    //? Append formal data from pack
+    for(const auto& value: this->DataValueArrayHolder)
+    {
+        {SerializedStream << value.createSerializedString() <<"";}
+    }
+    return SerializedStream.str();
+}
 //! Iterators
 
 typename std::vector<SVV1_GeneralSticker>::const_iterator SVV1_StickerPack::begin() {return this->DataValueArrayHolder.begin();}

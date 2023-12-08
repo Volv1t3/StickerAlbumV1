@@ -18,6 +18,7 @@ private:
     /*Area to store the cards that take part of the Album*/
     std::array<unsigned int , 25> Album{};
     std::vector<SVV1_GeneralSticker> AlbumStickerObjects;
+    std::array<unsigned int,25> FrecuencyOfRepeatedValues;
     /*Area to store the cards that have been repeated for this album*/
     std::vector<SVV1_GeneralSticker> RepeatedStickers;
     /* Area to store boolean to tell if the album its full, helpful to stop iterative calls if the album has already been filled */
@@ -35,8 +36,9 @@ public:
     /*Public Constant such that we have a way to know this is an Album Class*/
     const static char ALBUM_INDICATOR;
     /*Method for Data Visualizatnio in form of a table of numbers and names */
-    [[maybe_unused, nodiscard]] bool printingAlbumData() const;
+    [[maybe_unused]] void  printingAlbumData() const;
+    [[maybe_unused]] void printingRepeatedFrecuency() const;
     /*Method for Returning if the Album is Full*/
-    [[maybe_unused,nodiscard]] bool isFull();
+    [[maybe_unused,nodiscard]] bool isFull() const ;
 };
 #endif //STICKERALBUMV1_SVV1_ALBUM_HPP

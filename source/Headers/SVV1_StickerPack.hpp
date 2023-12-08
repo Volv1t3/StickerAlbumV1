@@ -29,6 +29,7 @@ public:
     [[maybe_unused, nodiscard]] SVV1_GeneralSticker getStickerAtLocationInVector(size_t indexOfSticker);
     /*Method for Serializing the pack and its contents*/
     [[maybe_unused, nodiscard ]] std::string getSerializedPack() const ;
+    [[maybe_unused, nodiscard ]] std::string getStringPack() const;
 
     /*Iterators */
     typename std::vector<SVV1_GeneralSticker>::const_iterator begin();
