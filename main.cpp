@@ -18,7 +18,6 @@
 #include <limits>
 #include <sys/file.h>
 #include <windows.h>
-#include <format>
 #include <algorithm>
 #include <random>
 //------------------------------------------------------
@@ -242,7 +241,7 @@ int main() {
                 counter += 1;
             }
         }
-        auto formattedStickerCreationReport = std::format("Se han generado {} stickers !", counter);
+        auto formattedStickerCreationReport ="Se han generado {} stickers !" + std::to_string(counter);
         UtilPrintTextWithinScreen(formattedStickerCreationReport);
         std::shuffle(stickerHolder.begin(), stickerHolder.end(), std::mt19937(std::random_device()()));
 
@@ -268,9 +267,9 @@ int main() {
 
         UtilPrintTextWithinScreen("Universidad San Francisco de Quito");
         UtilPrintTextWithinScreen("StickerAlbumV1 - Matematicos Famosos");
-        auto formattedStickerCreationReport2 = std::format("\nAhora que hemos generado aproximadamente {} paquetes con cinco stickers "
-                                                           "cada uno, podemos empezar a jugar y a completar nuestro propio album de "
-                                                           "matematicos! \n\nPara esto por favor selecciona una opcion del siguiente menu.\n",amountOfPacks);
+        auto formattedStickerCreationReport2 = "\nAhora que hemos generado aproximadamente {" + std::to_string(amountOfPacks) + "} paquetes con cinco stickers "
+                                               "cada uno, podemos empezar a jugar y a completar nuestro propio album de "
+                                               "matematicos! \n\nPara esto por favor selecciona una opcion del siguiente menu.\n";
         UtilPrintLongMessageOnPredefLength(formattedStickerCreationReport2);
 
         unsigned int GameMenuUserSelection{0};
@@ -325,14 +324,14 @@ int main() {
                         auto CheckIfFull = value.isFull();
                         if (!CheckIfFull)
                         {
-                            auto formattedStickerCreationReport5 = std::format("Album Numero #{}, se encuentra {}", counterAlbums + 1
-                            ,(CheckIfFull ? "Lleno" : "Vacio"));
+                            auto formattedStickerCreationReport5 = "Album Numero #{" + std::to_string(counterAlbums + 1) + "} esta "
+                            + (CheckIfFull ? "Lleno" : "Vacio");
                             std::cout << formattedStickerCreationReport5 << std::endl;
                             value.printingAlbumData();
                         }
                         else
                         {
-                            auto formattedStickerCreationReport5 = std::format("Album Numero #{}, se encuentra {}", counterAlbums + 1, "Lleno");
+                            auto formattedStickerCreationReport5 = "Album Numero #{" + std::to_string( counterAlbums + 1) + "} esta lleno";
                             std::cout << formattedStickerCreationReport5 << std::endl;
                             value.printingAlbumData();
                         }
@@ -349,7 +348,9 @@ int main() {
                     std::cout << "Total de Paquete en Forma de Lista." << std::endl;
                     for(auto const& value : UnopenedStickerPacks)
                     {
-                        auto formattedStickerCreationReport3 = std::format("| Paquete Numero #{} |", counterPacks + 1);
+                        //Transform this formattte message to a string
+                        auto formattedStickerCreationReport3 = "| Paquete Numero #{" + std::to_string(counterPacks + 1) + "} |";
+
                         std::cout << formattedStickerCreationReport3;
                         if ((counterPacks + 1) % packsPerColumn == 0 && counterPacks > 0)
                         {
@@ -367,7 +368,7 @@ int main() {
                     unsigned int packsPerColumn{2};
                     for(auto const& value : UnopenedStickerPacks)
                     {
-                        auto formattedStickerCreationReport3 = std::format("| Paquete Numero #{} |", counterPacks + 1);
+                        auto formattedStickerCreationReport3 = "| Paquete Numero #{" + std::to_string(counterPacks + 1) + "} |";
                         std::cout << formattedStickerCreationReport3;
                         if ((counterPacks  + 1) % packsPerColumn == 0 && counterPacks > 0)
                         {
@@ -377,7 +378,8 @@ int main() {
                     }
                     std::cout << std::endl;
                     //? Ask the user for input
-                    UtilPrintLongMessageOnPredefLength(std::format("Por favor, basado en la numeracion anterior (1 al {}) seleccione uno de los paquetes secretos",amountOfPacks));
+                    std::string message = "Por favor, basado en la numeracion anterior (1 al " + std::to_string(amountOfPacks) + ") seleccione uno de los paquetes secretos";
+                    UtilPrintLongMessageOnPredefLength(message);
                     unsigned int UserSelectionForPackIndexing{0};
                     do
                     {
@@ -391,7 +393,7 @@ int main() {
                     while ( UserSelectionForPackIndexing < 0 || UserSelectionForPackIndexing > UnopenedStickerPacks.size());
 
                     //? Report to the user which pack they chose
-                    auto formattedStickerCreationReport4 = std::format("Seleccionaste el paquete #{} !", UserSelectionForPackIndexing);
+                    std::string formattedStickerCreationReport4 = "Seleccionaste el paquete #" + std::to_string(UserSelectionForPackIndexing) + " !";
                     UtilPrintTextWithinScreen(formattedStickerCreationReport4);
 
                     //? Open the pack and add the stickers to the albums
@@ -429,7 +431,7 @@ int main() {
                     int counterAlbums{0};
                     for(auto const& value : stickerAlbumsHolder)
                     {
-                        auto formattedStickerCreationReport6 = std::format("Album Numero #{}", counterAlbums + 1);
+                        std::string formattedStickerCreationReport6 = "Album Numero #" + std::to_string(counterAlbums + 1);
                         std::cout << (formattedStickerCreationReport6) << std::endl;
                         value.printingRepeatedFrecuency();
                     }
@@ -481,7 +483,7 @@ int main() {
                             counter += 1;
                         }
                     }
-                    auto formattedStickerCreationReport = std::format("Se han generado {} stickers !", counter);
+                    std::string formattedStickerCreationReport = "Se han generado " + std::to_string(counter) + " stickers !";
                     UtilPrintTextWithinScreen(formattedStickerCreationReport);
                     std::shuffle(stickerHolder.begin(), stickerHolder.end(), std::mt19937(std::random_device()()));
 
