@@ -101,7 +101,6 @@ int main() {
                             }
                             if(foundStickerConstant == false){break;}
                             while (foundStickerConstant && !line.empty() && line.at(0) == 'S') {
-                                std::cout << line << std::endl;
                                 stickerAlbumsHolder.at(j).emplaceAStickerOnAlbum(SVV1_GeneralSticker(line));
                                 if (!std::getline(inputModelAlbumData, line)) { break; }
                                 if (!line.empty() && line.at(0) != 'S') { break; }
@@ -120,7 +119,6 @@ int main() {
                                 }
                             }
                             while (foundRepeatedConstant && !line.empty() && line.at(0) == 'S') {
-                                std::cout << line << std::endl;
                                 stickerAlbumsHolder.at(j).emplaceRepeatedSticker(SVV1_GeneralSticker(line));
                                 if (!std::getline(inputModelAlbumData, line)) { break; }
                                 if (!line.empty() && line.at(0) != 'S') { break; }
@@ -140,14 +138,12 @@ int main() {
                                 if (std::equal(line.begin(), line.end(), "P")) {
                                     continue;
                                 }
-                                std::cout << line << std::endl;
                                 UnopenedStickerPacks.at(j).addStickerToPack(SVV1_GeneralSticker(line));
                             }
                         }
 
                         //? Reading amount of opened packs created
                         std::getline(inputModelAlbumData, line);
-                        std::cout << std::endl;
                         if (line.at(0) == 'S') {std::getline(inputModelAlbumData, line);}
                         if (line.at(0) == '=') {std::getline(inputModelAlbumData, line);}
                         auto AmountOfOpenedPacks = std::stoi(line);
@@ -204,11 +200,10 @@ int main() {
     }
 
     //! End of file instantiation methods and reading methods.
-    system("cls");
-    SetConsoleTitleA("StickerAlbumV1 - Matematicos Famosos");
     if (HasLoadedFile) {;}
     else
     {
+        std::cout << std::endl;
         UtilPrintLongMessageOnPredefLength(
                 "\nBienvenido a StickerAlbumV1 - Matematicos Famosos. Esta aplicacion se basa en la representacion de un album con 25 matematico@s de la epoca que han dejado "
                 "una huella en el desarrollo de las ciencias exactas y de la ciencia en general. Con aportes de ciertos cientificos que puedes collecionar, inclusive se volvio posible"
@@ -241,7 +236,7 @@ int main() {
                 counter += 1;
             }
         }
-        auto formattedStickerCreationReport ="Se han generado {} stickers !" + std::to_string(counter);
+        auto formattedStickerCreationReport ="Se han generado {" + std::to_string(counter) + "} stickers !";
         UtilPrintTextWithinScreen(formattedStickerCreationReport);
         std::shuffle(stickerHolder.begin(), stickerHolder.end(), std::mt19937(std::random_device()()));
 
